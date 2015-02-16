@@ -1,4 +1,4 @@
-package kobe.things;
+package kobe.things.activity;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+
+import kobe.things.R;
 
 
 public class MainActivity extends ActionBarActivity {
