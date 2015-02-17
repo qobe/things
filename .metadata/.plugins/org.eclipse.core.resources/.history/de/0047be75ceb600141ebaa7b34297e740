@@ -1,0 +1,19 @@
+/**
+ * 
+ */
+
+var cast = window.cast || {};
+
+// Anonymous namespace
+
+(function() {
+	'use strict';
+	
+	window.castReceiverManager.onSenderDisconnected = function(event){
+		if(window.castReceiverManager.getSenders().length == 0 && 
+				event.reason == cast.receiver.system.DisconnectReason.REQUESTED_BY_SENDER){
+			window.close();
+		}
+	}
+})
+

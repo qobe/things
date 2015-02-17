@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <link id="favIcon" rel="icon" type="image/png" href="tictactoe.png"/>
+  <title>Tic-Tac-Toe</title>
+  <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+  <script src="GameDisplay.js"></script>
+  <script type="text/javascript">
+    window.onload = onLoad;
+    /**
+     * Initializes the receiver application and game objects, and starts the
+     * receiver.
+     */
+    function onLoad() {
+      var scoreboard = document.getElementById("scoreboard");
+      var questionview = document.getElementById("questionview");
+      var answerview = document.getElementById("answerview");
+      var context = canvas.getContext("2d");
+      var mBoard = new board(context);
+      var favIcon = document.getElementById("favIcon");
+      mBoard.clear();
+      mBoard.drawGrid();
+      window.gameEngine = new cast.TicTacToe(mBoard);
+    }
+  </script>
+  <div id="scoreboard" width="1280" height="720" style="position:absolute;top:0;left:0;width:100%;height:100%;background:#BDBDBD" />
+  <div id="questionview" />
+  <div id="answerview" />
+</html>

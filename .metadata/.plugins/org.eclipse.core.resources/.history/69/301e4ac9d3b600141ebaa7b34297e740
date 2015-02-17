@@ -1,0 +1,60 @@
+/**
+ * 
+ */
+
+var cast = window.cast || {};
+
+// Anonymous namespace
+
+(function() {
+	'use strict';
+	
+	Things.PROTOCOL = 'urn:x-cast:kobe.cast.things';
+	
+	function NewGame(){
+		this.castReceiverManager_ = cast.receiver.CastReceiverManager.getInstance();
+		this.castMessageBus_ = this.castReceiverManager_.getCastMessageBus(Things.PROTOCOL,
+				cast.receiver.cast.CastMessageBus.MessageType.STRING);
+	}
+	
+	window.castReceiverManager.onSenderDisconnected = function(event){
+		if(window.castReceiverManager.getSenders().length == 0 && 
+				event.reason == cast.receiver.system.DisconnectReason.REQUESTED_BY_SENDER){
+			window.close();
+		}
+	}
+	
+	window.castReceiverManager.onSenderConnected = function(event){
+		//udpate score board to add player
+	}
+	
+	/**
+	 * Object model for the game. should track events and data that can be passed 
+	 * between players
+	 */
+	ThingsGame.prototype = {
+			
+			/**
+			 * sender connected event
+			 * @param {event} event the sender connected
+			 * update scoreboard ui with sender info
+			 */
+			onSenderConnected: function(event){
+				this.castReceiverManager_.getSenders().length;
+			},
+			
+			/**
+			 * sender disconnect
+			 */
+			onSenderDisconnected: function(event){
+				if(this.castReceiverManager_.getSenders() == 0 &&
+						event.reason == cast.receiver.system.DisconnectReason.REQUESTED_BY_SENDER){
+					window.close();
+				}
+			}
+	
+	}
+	
+	
+})();
+
