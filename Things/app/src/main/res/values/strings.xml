@@ -7,4 +7,6 @@
     <string name="media_route_menu_title">cast!</string>
     <string name="host_game">host game</string>
     <string name="join_game">join game</string>
+    <string name="title_activity_game">GameActivity</string>
+
 </resources>
