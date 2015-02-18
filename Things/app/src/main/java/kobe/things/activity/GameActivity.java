@@ -16,6 +16,7 @@ public class GameActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //set fragment view based Extras bundled with intent
         setContentView(R.layout.activity_game);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
