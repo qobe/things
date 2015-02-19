@@ -1,28 +1,52 @@
 package kobe.things.activity;
 
-import android.support.v7.app.ActionBarActivity;
+
+
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
+import kobe.things.Constants;
 import kobe.things.R;
+import kobe.things.game.BluetoothGameService;
 
-public class GameActivity extends ActionBarActivity {
+public class GameActivity extends ActionBarActivity
+    implements SerfFragment.OnFragmentInteractionListener, CzarFragment.OnFragmentInteractionListener{
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //set fragment view based Extras bundled with intent
         setContentView(R.layout.activity_game);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
+
+        //If app is being restored from previous state,
+        //don't do anything. avoid overlapping fragments
+        if(savedInstanceState != null){
+            return;
         }
+        BluetoothGameService bgs =  BluetoothGameService.getBluetoothGameService();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        //set fragment view based Extras bundled with intent
+        switch(getIntent().getIntExtra(Constants.EXTRAS_GAME_CHOICE_ID, -1)){
+            case R.id.host_game_button:
+                transaction.add(R.id.container, new CzarFragment());
+                Log.d("GAME CHOICE", "Host Game");
+                break;
+            case R.id.join_game_button:
+                transaction.add(R.id.container, new SerfFragment());
+                Log.d("GAME CHOICE", "Join Game");
+                break;
+            default:
+
+                Log.d("GAME CHOICE", "No selection");
+                break;
+        }
+
+        transaction.commit();
     }
 
 
@@ -48,19 +72,19 @@ public class GameActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_serf, container, false);
-            return rootView;
-        }
+    private void usurpRole(Fragment frag){
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, frag).commit();
     }
+
+    // Implement abstract methods from fragment activities
+    // Change container view to match players role
+
+    public void onPlayerSwitchToCzar(){
+        usurpRole(new CzarFragment());
+    }
+
+    public void onPlayerSwitchToSerf(){
+        usurpRole(new SerfFragment());
+    }
+
 }

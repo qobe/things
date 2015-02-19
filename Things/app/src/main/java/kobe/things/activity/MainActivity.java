@@ -27,33 +27,31 @@ public class MainActivity extends ActionBarActivity {
     MediaRouteSelector mMediaRouteSelector;
     //Intent request codes
     private static final int REQUEST_ENABLE_BT = 3;
+    // Set listener for new game buttons
+    View.OnClickListener startGameListener = new View.OnClickListener(){
+        @Override
+        public void onClick(View v){
+            //create intent
+            //put v.getId() in as extra (will be either host or join game
+            if(!BluetoothAdapter.getDefaultAdapter().isEnabled()){
+                startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), REQUEST_ENABLE_BT);
+            }
+            else {
+                //bundle extras start activity GameActivity
+                Intent i = new Intent(MainActivity.this, GameActivity.class);
+                i.putExtra(Constants.EXTRAS_GAME_CHOICE_ID, v.getId());
+                startActivity(i);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
         setContentView(R.layout.activity_main);
-        TextView hostGameButton = (TextView)findViewById(R.id.host_game_button);
-        TextView joinGameButton = (TextView)findViewById(R.id.join_game_button);
-        View.OnClickListener startGameListener = new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                //create intent
-                //put v.getId() in as extra (will be either host or join game
-                if(!BluetoothAdapter.getDefaultAdapter().isEnabled()){
-                    startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), REQUEST_ENABLE_BT);
-                }
-                else {
-                //bundle extras start activity GameActivity
-                    Intent i = new Intent(MainActivity.this, GameActivity.class);
-                    i.putExtra(Constants.EXTRAS_GAME_CHOICE_ID, v.getId());
-                    startActivity(i);
-                }
+        findViewById(R.id.host_game_button).setOnClickListener(startGameListener);
+        findViewById(R.id.join_game_button).setOnClickListener(startGameListener);
 
-            }
-        };
-        hostGameButton.setOnClickListener(startGameListener);
-        joinGameButton.setOnClickListener(startGameListener);
     }
 
     @Override
@@ -64,7 +62,7 @@ public class MainActivity extends ActionBarActivity {
         mMediaRouter = MediaRouter.getInstance(getApplicationContext());
         mMediaRouteSelector = new MediaRouteSelector.Builder()
 //                .addControlCategory(CastMediaControlIntent.categoryForCast("APPLICATION_ID")).build();
-                  .addControlCategory(CastMediaControlIntent.CATEGORY_CAST).build();
+                .addControlCategory(CastMediaControlIntent.CATEGORY_CAST).build();
         MediaRouteActionProvider mediaRouteActionProvider =
                 (MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
         mediaRouteActionProvider.setRouteSelector(mMediaRouteSelector);
